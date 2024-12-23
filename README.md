@@ -49,3 +49,4 @@ Please make sure to update tests as appropriate.
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)# react-rails-graphql-boiler
+# react-rails-graphql-boiler
