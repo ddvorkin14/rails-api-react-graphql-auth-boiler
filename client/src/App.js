@@ -1,15 +1,15 @@
 import React from 'react';
 import { createBrowserRouter, RouterProvider, redirect, Outlet } from 'react-router-dom';
-import { Layout, theme, ConfigProvider } from 'antd';
+import { Layout, theme, ConfigProvider, notification } from 'antd';
 import { ApolloProvider } from '@apollo/client';
 import client from './apolloClient';
-import Login, { loginAction } from './components/Login';
+import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 import NotFound from './components/NotFound';
 import Navbar from './components/Navbar';
 import DynamicBreadcrumb from './utils/DynamicBreadcrumbs';
 import Signup, { signupAction } from './components/Signup';
-import Account, { updateAccountAction } from './components/Account';
+import Account from './components/Account';
 import Home from './components/Home';
 
 const { Content } = Layout;
@@ -78,7 +78,6 @@ const router = createBrowserRouter([
         path: 'account',
         element: <Account />,
         loader: protectedLoader,
-        action: updateAccountAction
       },
       {
         path: '/',
@@ -92,14 +91,28 @@ const router = createBrowserRouter([
     ],
   },
 ]);
-
+const Context = React.createContext({
+  name: 'Default',
+});
 const App = () => {
+  const [api, contextHolder] = notification.useNotification();
+  
+  const contextValue = React.useMemo(
+    () => ({
+      name: 'Ant Design',
+    }),
+    [],
+  );
+
   return (
-    <ApolloProvider client={client}>
-      <ConfigProvider>
-        <RouterProvider router={router} />
-      </ConfigProvider>
-    </ApolloProvider>
+    <Context.Provider value={contextValue}>
+      {contextHolder}
+      <ApolloProvider client={client}>
+        <ConfigProvider>
+          <RouterProvider router={router} />
+        </ConfigProvider>
+      </ApolloProvider>
+    </Context.Provider>
   );
 };
 

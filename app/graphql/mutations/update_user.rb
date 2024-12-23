@@ -15,13 +15,26 @@ module Mutations
     def resolve(id:, email: nil, name: nil, password: nil, password_confirmation: nil, old_password: nil)
       user = User.find(id)
 
-      if password.present?
+      if old_password.present?
         unless user.valid_password?(old_password)
           raise GraphQL::ExecutionError.new("Old password is incorrect")
-        end                
-      end
+        end
 
-      if user.update(email: email || user.email, name: name, password: password, password_confirmation: password_confirmation)
+        unless password_confirmation == password
+          raise GraphQL::ExecutionError.new("Password confirmation does not match")
+        end
+
+        if user.update(password: password, password_confirmation: password_confirmation)
+          client = SecureRandom.uuid
+          token = user.create_new_auth_token(client)
+
+          return { user: user, errors: [], token: token['access-token'], client: client }
+        else
+          raise GraphQL::ExecutionError.new(user.errors.full_messages)
+        end
+      end
+      
+      if user.update(email: email || user.email, name: name)
         client = SecureRandom.uuid
         token = user.create_new_auth_token(client)
         
