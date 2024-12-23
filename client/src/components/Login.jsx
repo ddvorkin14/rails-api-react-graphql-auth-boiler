@@ -1,8 +1,9 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom'; // Remove Form, useActionData
-import { Button, Input, message, Form } from 'antd'; // Import Form from antd instead
+import { Button, Input, message, Form, notification } from 'antd'; // Import Form from antd instead
 import Title from 'antd/es/typography/Title';
 import { gql, useMutation } from '@apollo/client'; // Add useMutation
+import { set } from 'mongoose';
 
 const LOGIN_MUTATION = gql`
   mutation LoginUser($input: LoginUserInput!) {
@@ -21,6 +22,39 @@ const LOGIN_MUTATION = gql`
 const Login = () => {
   const navigate = useNavigate();
   const [form] = Form.useForm(); // Use Ant Design's form
+
+  const [successMsg, setSuccessMsg] = React.useState(null);
+  const [errorMsg, setErrorMsg] = React.useState(null);
+  const [infoMsg, setInfoMsg] = React.useState(null);
+
+  React.useEffect(() => {
+    if (infoMsg) {
+      notification.info({
+        message: "Warning",
+        description: infoMsg,
+        placement: "topRight",
+      });
+      setInfoMsg(null); // Reset after showing notification
+    }
+
+    if (successMsg) {
+      notification.success({
+        message: "Success",
+        description: successMsg,
+        placement: "topRight",
+      });
+      setSuccessMsg(null); // Reset after showing notification
+    }
+
+    if (errorMsg) {
+      notification.error({
+        message: "Error",
+        description: errorMsg,
+        placement: "topRight",
+      });
+      setErrorMsg(null); // Reset after showing notification
+    }
+  }, [successMsg, errorMsg, infoMsg]);
 
   // Use Apollo's useMutation hook
   const [loginUser] = useMutation(LOGIN_MUTATION);
@@ -45,12 +79,15 @@ const Login = () => {
         if (data.loginUser.client) {
           localStorage.setItem('client', data.loginUser.client);
         }
-        navigate('/dashboard');
+        setSuccessMsg("Login successful");
+        setTimeout(() => {
+          navigate('/dashboard');
+        }, 500);
       } else {
-        message.error(errors || 'Login failed');
+        setErrorMsg(errors?.join(", "));
       }
     } catch (error) {
-      message.error(error.message || 'An error occurred during login');
+      setInfoMsg('An error occurred during login: ', error.message);
     }
   };
 
