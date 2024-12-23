@@ -10,6 +10,7 @@ import Navbar from './components/Navbar';
 import DynamicBreadcrumb from './utils/DynamicBreadcrumbs';
 import Signup, { signupAction } from './components/Signup';
 import Account, { updateAccountAction } from './components/Account';
+import Home from './components/Home';
 
 const { Content } = Layout;
 
@@ -82,7 +83,7 @@ const router = createBrowserRouter([
       {
         path: '/',
         loader: protectedLoader,
-        element: <Dashboard />,
+        element: <Home />,
       },
       {
         path: '*',
