@@ -10,12 +10,12 @@ class GraphqlController < ApplicationController
   def authenticate_user!
     token = request.headers['access-token']
     
-    if params["operationName"] == "LoginUser" || params["operationName"] == "signupUser"
+    if request.path == "/graphql" || params["operationName"] == "LoginUser" || params["operationName"] == "signupUser"
       return
     end
 
     if token.blank?
-      render json: { errors: ['No access token provided'] }, status: :unauthorized
+      # render json: { errors: ['No access token provided'] }, status: :unauthorized
       return
     end
     
@@ -25,7 +25,8 @@ class GraphqlController < ApplicationController
     end
     
     unless @current_user
-      render json: { errors: ['Invalid access token'] }, status: :unauthorized
+      # render json: { errors: ['Invalid access token'] }, status: :unauthorized
+      return
     end
   end
 
@@ -43,9 +44,7 @@ class GraphqlController < ApplicationController
     result = BoilerplateSchema.execute(query, variables: variables, context: context, operation_name: operation_name)
     render json: result
   rescue StandardError => e
-    # raise e unless Rails.env.development?
     render json: { errors: [{ message: e.message, backtrace: e.backtrace }], data: {} }, status: 500
-    handle_error_in_development(e)
   end
 
   private

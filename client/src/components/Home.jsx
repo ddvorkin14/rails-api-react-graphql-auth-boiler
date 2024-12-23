@@ -1,10 +1,13 @@
+import { Card } from "antd";
 import React from "react";
 
 const Home = () => {
   return (
     <div>
       <h1>Home</h1>
-      <p>Welcome to the home page!</p>
+      <Card title="Welcome to the Home page">
+        <p>This is the Home page</p>
+      </Card>
     </div>
   );
 }
