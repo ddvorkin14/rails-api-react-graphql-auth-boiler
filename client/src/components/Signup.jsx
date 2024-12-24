@@ -14,6 +14,7 @@ const SIGNUP_MUTATION = gql`
         id
         email
         name
+        role
       }
     }
   }
@@ -44,6 +45,7 @@ export async function signupAction({ request }) {
       localStorage.setItem('token', token);
       localStorage.setItem('uid', email);
       localStorage.setItem('id', user.id);
+      localStorage.setItem('role', user.role);
       
       return { success: true };
     } else {

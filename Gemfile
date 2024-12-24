@@ -27,6 +27,7 @@ gem 'devise'
 gem 'graphql'
 gem 'devise_token_auth'
 gem 'pry', '~> 0.15.0'
+gem 'cancancan'
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ mswin mswin64 mingw x64_mingw jruby ]

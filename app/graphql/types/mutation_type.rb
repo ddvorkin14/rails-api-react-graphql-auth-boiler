@@ -2,8 +2,10 @@
 
 module Types
   class MutationType < Types::BaseObject
-    field :signup_user, mutation: Mutations::SignupUser
-    field :login_user, mutation: Mutations::LoginUser
-    field :update_user, mutation: Mutations::UpdateUser
+    field :signup_user, mutation: Mutations::Users::SignupUser
+    field :login_user, mutation: Mutations::Users::LoginUser
+    field :update_user, mutation: Mutations::Users::UpdateUser
+    field :create_page, mutation: Mutations::Pages::CreatePage
+    field :update_page, mutation: Mutations::Pages::UpdatePage
   end
 end

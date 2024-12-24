@@ -1,9 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom'; // Remove Form, useActionData
-import { Button, Input, message, Form, notification } from 'antd'; // Import Form from antd instead
+import { Button, Input, Form, notification } from 'antd'; // Import Form from antd instead
 import Title from 'antd/es/typography/Title';
 import { gql, useMutation } from '@apollo/client'; // Add useMutation
-import { set } from 'mongoose';
 
 const LOGIN_MUTATION = gql`
   mutation LoginUser($input: LoginUserInput!) {
@@ -13,6 +12,7 @@ const LOGIN_MUTATION = gql`
       user {
         id
         email
+        role
       }
       errors
     }
@@ -34,7 +34,7 @@ const Login = () => {
         description: infoMsg,
         placement: "topRight",
       });
-      setInfoMsg(null); // Reset after showing notification
+      setInfoMsg(null);
     }
 
     if (successMsg) {
@@ -43,7 +43,7 @@ const Login = () => {
         description: successMsg,
         placement: "topRight",
       });
-      setSuccessMsg(null); // Reset after showing notification
+      setSuccessMsg(null);
     }
 
     if (errorMsg) {
@@ -52,7 +52,7 @@ const Login = () => {
         description: errorMsg,
         placement: "topRight",
       });
-      setErrorMsg(null); // Reset after showing notification
+      setErrorMsg(null);
     }
   }, [successMsg, errorMsg, infoMsg]);
 
@@ -76,6 +76,7 @@ const Login = () => {
         localStorage.setItem('token', token);
         localStorage.setItem('client', client);
         localStorage.setItem('id', user.id);
+        localStorage.setItem('role', user.role);
         if (data.loginUser.client) {
           localStorage.setItem('client', data.loginUser.client);
         }

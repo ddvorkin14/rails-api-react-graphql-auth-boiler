@@ -11,6 +11,8 @@ import DynamicBreadcrumb from './utils/DynamicBreadcrumbs';
 import Signup, { signupAction } from './components/Signup';
 import Account from './components/Account';
 import Home from './components/Home';
+import Pages from './components/Pages';
+import Users from './components/Users';
 
 const { Content } = Layout;
 
@@ -85,6 +87,16 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
+        path: 'pages',
+        loader: protectedLoader,
+        element: <Pages />,
+      },
+      {
+        path: 'users',
+        loader: protectedLoader,
+        element: <Users />
+      },
+      {
         path: '*',
         element: <NotFound />,
       },
@@ -95,11 +107,11 @@ const Context = React.createContext({
   name: 'Default',
 });
 const App = () => {
-  const [api, contextHolder] = notification.useNotification();
+  const [, contextHolder] = notification.useNotification();
   
   const contextValue = React.useMemo(
     () => ({
-      name: 'Ant Design',
+      name: '',
     }),
     [],
   );
